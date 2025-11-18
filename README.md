@@ -2,7 +2,7 @@
 
 An interactive playground for exploring the new CSS `corner-shape` property. Experiment with different corner styles (squircle, round, scoop, bevel, notch, and custom superellipse) and see the generated CSS code in real-time.
 
-**Live demo:** [madebyenigma.com/corner-shapes](https://madebyenigma.com/corner-shapes)
+**Live demo:** [madebyenigma.com/corner-shapes](https://corner-shape.madebyenigma.com/)
 
 ## What it does
 
