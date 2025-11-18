@@ -14,6 +14,9 @@ This tool helps you visualize and understand the experimental `corner-shape` CSS
 - Multiple corner shape options (squircle, round, scoop, bevel, notch, custom superellipse)
 - Adjustable border radius and preview dimensions
 - Live CSS code generation
+
+## TODO
+
 - Fallback support for unsupported browsers
 
 ## Getting Started
