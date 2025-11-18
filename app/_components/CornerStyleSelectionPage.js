@@ -60,17 +60,20 @@ const CodeDisplay = ({
   return (
     <div className=" w-full">
       <div className="dark:bg-neutral-800 bg-zinc-100 w-full rounded-lg border border-zinc-300 dark:border-neutral-700">
-        <div className="px-4 py-2 border-b border-zinc-300 dark:border-neutral-700 font-bold">
+        <h3 className="px-4 py-2 border-b border-zinc-300 dark:border-neutral-700 font-bold">
           CSS Code
-        </div>
-        <pre className="w-full px-4 py-4 font-mono text-sm">
-          {`.border-corner-shape-${selectedCornerType} {
+        </h3>
+        <pre
+          className="w-full px-4 py-4 font-mono text-sm"
+          aria-label="Generated CSS code"
+        >
+          <code>{`.border-corner-shape-${selectedCornerType} {
   corner-shape: ${cornerType};
   border-radius: ${borderRadius}px;
   padding: ${padding}px;
   width: ${previewBoxWidth}px;
   height: ${previewBoxHeight}px;
-}`}
+}`}</code>
         </pre>
       </div>
     </div>
@@ -90,12 +93,14 @@ const TypeSelection = ({
   }
   return (
     <button
-      className={` w-full flex flex-col overflow-hidden cursor-pointer  dark:bg-neutral-800 bg-zinc-100 rounded-xl duration-75 ${
+      className={`w-full flex flex-col overflow-hidden cursor-pointer dark:bg-neutral-800 bg-zinc-100 rounded-xl duration-75 ${
         isSelected
           ? "outline-blue-500 outline-3"
-          : "border-zinc-300 dark:border-neutral-700  hover:border-blue-500 border"
+          : "border-zinc-300 dark:border-neutral-700 hover:border-blue-500 border"
       }`}
       onClick={onClick}
+      aria-label={`Select ${varient.name} corner style`}
+      aria-pressed={isSelected}
     >
       <div className="flex-1 flex items-center justify-center rounded-t-xl min-h-[120px] bg-zinc-200 dark:bg-neutral-800">
         {/* <Image
@@ -115,6 +120,7 @@ const TypeSelection = ({
             "corner-shape": cornerType,
             borderRadius: `calc(var(--border-radius) * 0.2)`,
           }}
+          aria-hidden="true"
         ></div>
       </div>
       <div className="text-base w-full font-bold px-2 py-2 border-t rounded-b-xl border-zinc-300 dark:border-neutral-700 bg-neutral-200 dark:bg-neutral-600">
@@ -157,13 +163,16 @@ const PreviewBlock = ({
   );
 };
 
-const SimpleInputBox = ({ value, onChange, type }) => {
+const SimpleInputBox = ({ value, onChange, type, ariaLabel }) => {
   return (
     <input
       type={type}
       className="w-24 dark:bg-neutral-800 bg-white font-bold rounded-lg border border-zinc-300 dark:border-neutral-700 p-2"
       value={value}
-      onChange={onChange}
+      onChange={(e) =>
+        onChange(type === "number" ? Number(e.target.value) : e.target.value)
+      }
+      aria-label={ariaLabel}
     />
   );
 };
@@ -240,7 +249,10 @@ const CornerStyleSelectionPage = () => {
   return (
     <>
       <div className="grid grid-cols-12 w-full relative border-b border-zinc-300 dark:border-neutral-900">
-        <div className="w-full col-span-7 h-[calc(100vh-64px)] sticky top-0  bg-zinc-50 dark:bg-neutral-800  border-r border-zinc-200 dark:border-neutral-700">
+        <section
+          className="w-full col-span-7 h-[calc(100vh-64px)] sticky top-0 bg-zinc-50 dark:bg-neutral-800 border-r border-zinc-200 dark:border-neutral-700"
+          aria-label="Live preview"
+        >
           <div className="w-full h-full flex items-center justify-center">
             <PreviewBlock
               previewBoxWidth={previewBoxWidth}
@@ -251,10 +263,13 @@ const CornerStyleSelectionPage = () => {
               superellipseRate={superellipseRate}
             />
           </div>
-        </div>
+        </section>
 
-        <div className=" pt-4 col-span-5 flex flex-col">
-          <div className="w-full  px-12">
+        <section
+          className="pt-4 col-span-5 flex flex-col"
+          aria-label="Controls and settings"
+        >
+          <div className="w-full px-12">
             {isUnsupported && (
               <>
                 <div className="mb-8 bg-yellow-800 dark:bg-yellow-800 text-black dark:text-white px-6 py-4 rounded-lg shadow-lg  max-w-2xl">
@@ -285,8 +300,12 @@ const CornerStyleSelectionPage = () => {
               </>
             )}
 
-            <div className="text-base font-bold mb-4">Corner Styles</div>
-            <div className="grid grid-cols-4 gap-4 w-full">
+            <h2 className="text-base font-bold mb-4">Corner Styles</h2>
+            <div
+              className="grid grid-cols-4 gap-4 w-full"
+              role="group"
+              aria-label="Corner style selection"
+            >
               {cornerTypesVarient.map((varient) => (
                 <TypeSelection
                   key={varient.value}
@@ -300,13 +319,20 @@ const CornerStyleSelectionPage = () => {
             </div>
           </div>
           <div className="w-full px-8">
-            <div className="w-full mt-8 dark:bg-neutral-800 bg-zinc-100 rounded-lg border border-zinc-300 dark:border-neutral-700 p-4">
-              <div className="flex  gap-12 w-full border-b border-zinc-300 dark:border-neutral-700 pb-4">
-                <div className="w-32 font-bold text-gray-900 dark:text-zinc-200">
+            <section
+              className="w-full mt-8 dark:bg-neutral-800 bg-zinc-100 rounded-lg border border-zinc-300 dark:border-neutral-700 p-4"
+              aria-label="Adjustment controls"
+            >
+              <div className="flex gap-12 w-full border-b border-zinc-300 dark:border-neutral-700 pb-4">
+                <label
+                  htmlFor="border-radius-slider"
+                  className="w-32 font-bold text-gray-900 dark:text-zinc-200"
+                >
                   Border Radius
-                </div>
+                </label>
                 <div className="flex-1">
                   <Slider
+                    id="border-radius-slider"
                     value={borderRadius}
                     max={
                       previewBoxWidth > previewBoxHeight
@@ -321,33 +347,36 @@ const CornerStyleSelectionPage = () => {
                         : previewBoxHeight / 2) / 5
                     }
                     onChange={setBorderRadius}
+                    aria-label="Border radius slider"
                   />
                 </div>
                 <div>
-                  {/* <input
-                type="number"
-                className="w-24 bg-neutral-800 rounded-lg border border-zinc-300 dark:border-neutral-700 p-2"
-                value={borderRadius}
-                onChange={(e) => setBorderRadius(e.target.value)}
-              /> */}
                   <SimpleInputBox
                     value={borderRadius}
                     onChange={setBorderRadius}
                     type="number"
+                    ariaLabel="Border radius input"
                   />
                 </div>
               </div>
               {selectedCornerType === "superellipse" && (
-                <div className="flex  gap-12 w-full mt-4 border-b pb-4 border-zinc-300 dark:border-neutral-700">
-                  <div className="w-32 font-bold">Superellipse Rate</div>
+                <div className="flex gap-12 w-full mt-4 border-b pb-4 border-zinc-300 dark:border-neutral-700">
+                  <label
+                    htmlFor="superellipse-rate-slider"
+                    className="w-32 font-bold"
+                  >
+                    Superellipse Rate
+                  </label>
                   <div className="flex-1">
                     <Slider
+                      id="superellipse-rate-slider"
                       value={superellipseRate}
                       max={3}
                       min={-3}
                       step={0.5}
                       labelStepSize={1}
                       onChange={setSuperellipseRate}
+                      aria-label="Superellipse rate slider"
                     />
                   </div>
                   <div>
@@ -355,20 +384,28 @@ const CornerStyleSelectionPage = () => {
                       value={superellipseRate / 10}
                       onChange={setSuperellipseRate}
                       type="number"
+                      ariaLabel="Superellipse rate input"
                     />
                   </div>
                 </div>
               )}
-              <div className="flex  gap-12 w-full mt-4">
-                <div className="w-32 font-bold">Preview Box Width</div>
+              <div className="flex gap-12 w-full mt-4">
+                <label
+                  htmlFor="preview-width-slider"
+                  className="w-32 font-bold"
+                >
+                  Preview Box Width
+                </label>
                 <div className="flex-1">
                   <Slider
+                    id="preview-width-slider"
                     value={previewBoxWidth}
                     max={500}
                     min={0}
                     step={1}
                     labelStepSize={500 / 5}
                     onChange={setPreviewBoxWidth}
+                    aria-label="Preview box width slider"
                   />
                 </div>
                 <div>
@@ -376,19 +413,27 @@ const CornerStyleSelectionPage = () => {
                     value={previewBoxWidth}
                     onChange={setPreviewBoxWidth}
                     type="number"
+                    ariaLabel="Preview box width input"
                   />
                 </div>
               </div>
-              <div className="flex  gap-12 w-full mt-6">
-                <div className="w-32 font-bold">Preview Box Height</div>
+              <div className="flex gap-12 w-full mt-6">
+                <label
+                  htmlFor="preview-height-slider"
+                  className="w-32 font-bold"
+                >
+                  Preview Box Height
+                </label>
                 <div className="flex-1">
                   <Slider
+                    id="preview-height-slider"
                     value={previewBoxHeight}
                     max={500}
                     min={0}
                     step={1}
                     labelStepSize={500 / 5}
                     onChange={setPreviewBoxHeight}
+                    aria-label="Preview box height slider"
                   />
                 </div>
                 <div>
@@ -396,12 +441,16 @@ const CornerStyleSelectionPage = () => {
                     value={previewBoxHeight}
                     onChange={setPreviewBoxHeight}
                     type="number"
+                    ariaLabel="Preview box height input"
                   />
                 </div>
               </div>
-            </div>
+            </section>
           </div>
-          <div className="w-full h-full flex flex-col ">
+          <section
+            className="w-full h-full flex flex-col"
+            aria-label="Generated CSS code"
+          >
             <div className="p-8">
               <CodeDisplay
                 previewBoxWidth={previewBoxWidth}
@@ -412,8 +461,8 @@ const CornerStyleSelectionPage = () => {
                 superellipseRate={superellipseRate}
               />
             </div>
-          </div>
-        </div>
+          </section>
+        </section>
       </div>
       {/* <div className="h-[400px]">asdasda</div> */}
     </>
