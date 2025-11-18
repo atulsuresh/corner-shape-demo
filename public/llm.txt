@@ -1,0 +1,155 @@
+# CSS corner-shape Property
+
+## What is corner-shape?
+
+The `corner-shape` CSS property is an experimental property that allows you to customize the shape of a box's corners beyond traditional rounded corners. It works in conjunction with the `border-radius` property to create various corner styles like squircles, beveled corners, notched corners, and more.
+
+## Understanding corner-shape
+
+The `corner-shape` property modifies how rounded corners are rendered. While `border-radius` controls the size of the rounded area, `corner-shape` determines the actual shape of those corners. This enables designers and developers to create more sophisticated and unique corner styles that go beyond simple circular rounding.
+
+## Corner Shape Values
+
+The `corner-shape` property accepts several keyword values and the `superellipse()` function:
+
+### Keyword Values
+
+- **`round`** - The default value. Creates traditional rounded corners (circular arcs), which is the same effect as using `border-radius` alone without `corner-shape`.
+
+- **`square`** - Removes any corner rounding, effectively canceling out the `border-radius` and creating sharp, square corners.
+
+- **`bevel`** - Creates chamfered or beveled corners by drawing a straight line between the two ends of the `border-radius`, creating a diagonal cut effect.
+
+- **`squircle`** - Creates a squircle shape (a rounded square), which is a superellipse with a specific curve that creates a smooth transition between straight edges and rounded corners.
+
+- **`scoop`** - Creates inward-curved corners, creating a concave or "scooped out" appearance at each corner.
+
+- **`notch`** - Creates notched corners, where the corner is cut inward at a 45-degree angle, creating a distinctive notched appearance.
+
+### Custom Values with superellipse()
+
+The `superellipse()` function allows you to create custom corner shapes by specifying a rate parameter:
+
+```css
+corner-shape: superellipse(0.6);
+corner-shape: superellipse(-1.2);
+```
+
+The rate parameter controls the curvature:
+- Positive values create outward curves (similar to round or squircle)
+- Negative values create inward curves (similar to scoop)
+- Values closer to 0 create more square-like shapes
+- Higher absolute values create more pronounced curves
+
+## Syntax
+
+The `corner-shape` property can accept one to four values, similar to `border-radius`:
+
+```css
+/* Single value - applies to all four corners */
+corner-shape: bevel;
+
+/* Two values - top-left & bottom-right, top-right & bottom-left */
+corner-shape: notch superellipse(0.6);
+
+/* Three values - top-left, top-right & bottom-left, bottom-right */
+corner-shape: superellipse(-1.2) square squircle;
+
+/* Four values - top-left, top-right, bottom-right, bottom-left */
+corner-shape: scoop superellipse(-1.6) superellipse(-2.2) round;
+```
+
+## How corner-shape Works with border-radius
+
+The `corner-shape` property only has an effect when `border-radius` is applied to an element. If `border-radius` is `0` or not set, `corner-shape` will have no visible effect.
+
+The property modifies the shape of the rounded area defined by `border-radius`. For example:
+- With `border-radius: 20px` and `corner-shape: round`, you get circular rounded corners
+- With `border-radius: 20px` and `corner-shape: bevel`, you get beveled corners with a 20px diagonal cut
+- With `border-radius: 20px` and `corner-shape: squircle`, you get a squircle shape with 20px rounding
+
+## Visual Effects
+
+When you apply `corner-shape`, it affects not just the element's shape, but also:
+- Borders follow the defined corner shape
+- Outlines follow the defined corner shape
+- Box shadows follow the defined corner shape
+- Background effects follow the defined corner shape
+
+This means the entire visual appearance of the element, including all its decorative properties, will conform to the specified corner shape.
+
+## Browser Compatibility
+
+The `corner-shape` property is currently experimental and has limited browser support:
+
+- **Supported**: Chromium-based browsers (Chrome, Edge, Opera)
+- **Not Supported**: Safari, Firefox
+
+This is an experimental technology, so browser compatibility should be checked carefully before using in production. The property is not yet part of the Baseline web standards.
+
+## Use Cases
+
+The `corner-shape` property opens up new design possibilities:
+
+- **Modern UI Design**: Create distinctive corner styles that stand out from traditional rounded corners
+- **Brand Identity**: Use unique corner shapes as part of a brand's visual language
+- **Design Systems**: Implement consistent corner styles across a design system
+- **Creative Layouts**: Experiment with different corner styles for cards, buttons, and containers
+- **Visual Hierarchy**: Use different corner shapes to create visual distinction between elements
+
+## Examples
+
+### Beveled Corners
+```css
+.element {
+  border-radius: 20px;
+  corner-shape: bevel;
+}
+```
+
+### Squircle Shape
+```css
+.element {
+  border-radius: 30px;
+  corner-shape: squircle;
+}
+```
+
+### Mixed Corner Styles
+```css
+.element {
+  border-radius: 25px;
+  corner-shape: round bevel; /* top-left & bottom-right: round, top-right & bottom-left: bevel */
+}
+```
+
+### Custom Superellipse
+```css
+.element {
+  border-radius: 40px;
+  corner-shape: superellipse(0.8);
+}
+```
+
+## Animation
+
+Different `corner-shape` values can be smoothly animated between. The browser uses the `superellipse()` equivalents of keyword values for interpolation, allowing for smooth transitions between corner styles.
+
+## Related Properties
+
+The `corner-shape` property is a shorthand for these individual corner properties:
+- `corner-top-left-shape`
+- `corner-top-right-shape`
+- `corner-bottom-right-shape`
+- `corner-bottom-left-shape`
+
+You can also use side shorthands:
+- `corner-top-shape` (top-left and top-right)
+- `corner-right-shape` (top-right and bottom-right)
+- `corner-bottom-shape` (bottom-right and bottom-left)
+- `corner-left-shape` (bottom-left and top-left)
+
+## Learn More
+
+For detailed technical documentation, visit the [MDN corner-shape documentation](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/corner-shape).
+
